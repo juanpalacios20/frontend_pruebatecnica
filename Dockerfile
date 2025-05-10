@@ -4,13 +4,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 
-COPY package*.json ./
+COPY vite-project/package.json vite-project/package-lock.json ./
 
 
 RUN npm install --legacy-peer-deps
 
 
-COPY . .
+COPY vite-project/ .
 
 RUN npm run build
 
