@@ -18,21 +18,21 @@ const managementMedicine = async () => {
 
   try {
     if (editMode && editId != null) {
-      await axios.put(`http://localhost:3000/api/${editId}`, {
+      await axios.put(`https://backend-pruebatecnica-2cuj.onrender.com/api/${editId}`, {
         name: name,
       });
 
-      const response = await axios.get("http://localhost:3000/api/");
+      const response = await axios.get("https://backend-pruebatecnica-2cuj.onrender.com/api/");
       setMedicine(response.data);
 
       setEditMode(false);
       setEditId(null);
     } else {
-      await axios.post("http://localhost:3000/api/", {
+      await axios.post("https://backend-pruebatecnica-2cuj.onrender.com/api/", {
         name: name,
       });
 
-      const response = await axios.get("http://localhost:3000/api/");
+      const response = await axios.get("https://backend-pruebatecnica-2cuj.onrender.com/api/");
       setMedicine(response.data);
     }
 
@@ -45,8 +45,8 @@ const managementMedicine = async () => {
 
   const deleteMedicine = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/${id}`);
-      const response = await axios.get("http://localhost:3000/api/");
+      await axios.delete(`https://backend-pruebatecnica-2cuj.onrender.com/api/${id}`);
+      const response = await axios.get("https://backend-pruebatecnica-2cuj.onrender.com/api/");
       setMedicine(response.data);
     } catch (error) {
       console.error("Error al eliminar el medicamento:", error);
