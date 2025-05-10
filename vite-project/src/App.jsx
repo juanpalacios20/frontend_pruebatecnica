@@ -8,7 +8,7 @@ export default function App() {
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/").then((response) => {
+    axios.get("https://backend-pruebatecnica-2cuj.onrender.com/api/").then((response) => {
       setMedicine(response.data);}).catch((error) => {
         console.error("Error fetching data:", error);});
   }, []);
