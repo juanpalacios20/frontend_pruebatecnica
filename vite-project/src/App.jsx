@@ -1,42 +1,60 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function App() {
   const [name, setName] = useState("");
   const [medicine, setMedicine] = useState([]);
-  const [contador, setContador] = useState(1);
   const [editMode, setEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
 
-  const managementMedicine = () => {
-    if (name.trim() === "") return;
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/").then((response) => {
+      setMedicine(response.data);}).catch((error) => {
+        console.error("Error fetching data:", error);});
+  }, []);
 
-    if(editMode && editId != null){
-      setMedicine(
-        medicine.map((libro) =>
-          libro.id === editId ? { ...libro, name: name } : libro
-        )
-      );
+const managementMedicine = async () => {
+  if (name.trim() === "") return;
+
+  try {
+    if (editMode && editId != null) {
+      await axios.put(`http://localhost:3000/api/${editId}`, {
+        name: name,
+      });
+
+      const response = await axios.get("http://localhost:3000/api/");
+      setMedicine(response.data);
+
       setEditMode(false);
       setEditId(null);
     } else {
-      setMedicine([
-        ...medicine,
-        {
-          id: contador,
-          name: name,
-        },
-      ]);
-      setContador(contador + 1);
-    }
-    setName("");
-  };
+      await axios.post("http://localhost:3000/api/", {
+        name: name,
+      });
 
-  const deleteMedicine = (id) => {
-    setMedicine(medicine.filter((libro) => libro.id !== id));
+      const response = await axios.get("http://localhost:3000/api/");
+      setMedicine(response.data);
+    }
+
+    setName("");
+  } catch (error) {
+    console.error("Error al guardar el medicamento:", error);
+  }
+};
+
+
+  const deleteMedicine = async (id) => {
+    try {
+      await axios.delete(`http://localhost:3000/api/${id}`);
+      const response = await axios.get("http://localhost:3000/api/");
+      setMedicine(response.data);
+    } catch (error) {
+      console.error("Error al eliminar el medicamento:", error);
+    }
   };
 
   const editMedicine = (medicineToEdit) => {
-    setName(medicineToEdit.name);
+    setName(medicineToEdit.medicineName);
     setEditMode(true);
     setEditId(medicineToEdit.id);
   }
@@ -77,7 +95,7 @@ export default function App() {
               >
                 <div>
                   <p className="font-semibold">ID: {medicine.id}</p>
-                  <p className="text-gray-700">Nombre: {medicine.name}</p>
+                  <p className="text-gray-700">Nombre: {medicine.medicineName}</p>
                 </div>
                 <div className="flex gap-2">
                   <button
